@@ -62,7 +62,7 @@ import { createJsonLd, createJsonLdCollection, getItems } from "jsonld-item"
 
 // Builds a complete item: @id, @type, @context and an id derived from the IRI
 const article = createJsonLd({ type: "/api/articles", object: { title: "Draft" } })
-// → { "@id": "/api/articles/k3f9x2", "@type": "/api/articles", title: "Draft", id: "k3f9x2" }
+// → { "@id": "/api/articles/k3f9x2", "@type": "/api/articles", "@context": "/api/articles", title: "Draft", id: "k3f9x2" }
 
 const collection = createJsonLdCollection({ type: "/api/articles", member: [article] })
 getItems(collection) // → [article]
