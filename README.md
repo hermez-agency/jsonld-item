@@ -72,6 +72,27 @@ When the source object has no `id`, the IRI gets a random one
 (`createJsonLdIri`, `createUniqId`) — handy for test fixtures, or for items
 created client-side before they are persisted.
 
+### API Platform 3 and 4
+
+API Platform 3 prefixes collection keys with `hydra:` (`hydra:member`,
+`hydra:totalItems`); API Platform 4 drops the prefix by default (`member`,
+`totalItems`). `getItems` reads both, so a collection never comes back empty
+just because the server switched format:
+
+```ts
+getItems({
+  "@id": "/api/articles",
+  "@type": "hydra:Collection",
+  "hydra:member": [article],
+}) // → [article]
+getItems({ "@id": "/api/articles", "@type": "Collection", member: [article] }) // → [article]
+```
+
+`JsonLdCollection<T>` accepts both shapes too: it is the union of
+`JsonLdMemberCollection<T>` (without prefix) and
+`JsonLdHydraMemberCollection<T>` (with prefix). `createJsonLdCollection` builds
+the unprefixed form.
+
 ### Types
 
 `JsonLDItem<T>` combines your domain type with the JSON-LD shape, and
@@ -84,7 +105,8 @@ type Article = JsonLDItem<{ title: string; published: boolean }>
 type Articles = JsonLdCollection<{ title: string }>
 ```
 
-Also exported: `JsonLdIri`, `JsonLdType`, `BaseJsonLdItemInterface`,
+Also exported: `JsonLdMemberCollection`, `JsonLdHydraMemberCollection`,
+`JsonLdIri`, `JsonLdType`, `BaseJsonLdItemInterface`,
 `IdAbleInterface`, `JsonLdIriAble`, `JsonLdTypeAble` and
 `JsonLdIriContainerInterface`.
 
